@@ -142,6 +142,11 @@ func (el *Element) InputE(text string) error {
 	return err
 }
 
+func (el *Element) BlurE() error {
+	_, err := el.EvalE(true, "() => this.blur()", nil)
+	return err
+}
+
 // SelectE doc is similar to the method Select
 func (el *Element) SelectE(selectors []string) error {
 	err := el.WaitVisibleE()
@@ -156,6 +161,15 @@ func (el *Element) SelectE(selectors []string) error {
 
 	_, err = el.EvalE(true, el.page.jsFn("select"), Array{selectors})
 	return err
+}
+
+func (el *Element) AttributeE(name string) (string, error) {
+	attr, err := el.EvalE(true, "(n) => this.getAttribute(n)", Array{name})
+	if err != nil {
+		return "", err
+	}
+
+	return attr.Value.Str, nil
 }
 
 // SetFilesE doc is similar to the method SetFiles
